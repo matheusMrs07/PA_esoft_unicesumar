@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Aluno extends Pessoa {
-    String ra;
-    List<Curso> cursos = new ArrayList<>();
+    protected String ra;
+    protected List<Curso> cursos = new ArrayList<>();
 
     public Aluno(String nome, String cpf, int idade, String ra) {
         super(nome, cpf, idade);
@@ -29,6 +29,7 @@ public class Aluno extends Pessoa {
         this.cursos.add(c);
     }
     
+    @Override
     public void exibirDetalhes(){
         System.out.println("Aluno "+ this.nome+" :");
         System.out.println("RA: "+ this.ra);
@@ -43,5 +44,10 @@ public class Aluno extends Pessoa {
     public void desmatricalarEmCurso(Curso c){
         this.cursos.remove(c);
     }
+
+    public List<Curso> getCursosMatriculados(){
+        return this.cursos;
+    }
+    
 
 }
