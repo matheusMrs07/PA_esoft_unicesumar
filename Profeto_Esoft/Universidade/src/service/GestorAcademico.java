@@ -1,4 +1,5 @@
 package service;
+import custom.exceptions.ItemNaoEncotradoException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +29,13 @@ public class GestorAcademico {
         professores.remove(p);
     }
 
-    public void matricularAluno(Aluno a, String curso_key){
+    public void matricularAluno(Aluno a, String curso_key) throws ItemNaoEncotradoException{
         Curso c = this.cursos.get(curso_key);
+        if(c == null){
+            System.out.println("Curso não encontrado!");
+            return;
+            // throw  new ItemNaoEncotradoException("Curso não encrontrado.");
+        }
         a.matricalarEmCurso(c);
         alunos.add(a);
     }

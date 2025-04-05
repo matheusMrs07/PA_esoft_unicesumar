@@ -1,5 +1,6 @@
 package veiculos;
 
+import custom.exeptions.TanqueVazioException;
 
 public abstract class Veiculo {
     protected String marca;
@@ -20,7 +21,7 @@ public abstract class Veiculo {
         this.cor = cor;
     }
 
-    public abstract void acelerar();
+    public abstract void acelerar() throws TanqueVazioException;
 
     public void exebirInformacoes(){
         System.out.println("Marca: "+ marca);
