@@ -1,13 +1,24 @@
+package models;
+
 public class Pessoa {
 
     private String nome;
     private int idade;
     private String cpf;
+    private int id;
 
     public Pessoa(String nome, int idade, String cpf) {
         this.nome = nome;
         this.idade = idade;
         this.cpf = cpf;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getNome(){
@@ -21,5 +32,10 @@ public class Pessoa {
     public String getCpf(){
         return cpf;
     }
+
+    public void setNome(String nome){
+        this.nome = nome;
+    }
+
     
 }
