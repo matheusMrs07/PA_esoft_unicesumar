@@ -1,0 +1,25 @@
+
+services:
+
+  app:
+    container_name: app
+    build: .
+    volumes:
+      - ./projeto_java:/app
+    
+
+  mysql-db:
+    image: mysql:latest
+    container_name: mysql_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    # env_file:
+    #   - .env
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+
