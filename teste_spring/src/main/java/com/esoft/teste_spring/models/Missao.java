@@ -1,17 +1,19 @@
 package com.esoft.teste_spring.models;
 
+import java.util.List;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.esoft.teste_spring.DTOs.NinjaDTO;
+import com.esoft.teste_spring.DTOs.MissaoDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +25,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_ninja")
-public class Ninja {
+@Table(name = "tb_missoes")
+public class Missao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,23 +34,18 @@ public class Ninja {
 
     @Column(nullable = false)
     private String nome;
+    private String descricao;
+    private String dificuldade;
 
-    @Column(nullable = false)
-    private int idade;
-    private String cla;
-    private String vila;
-
-    @ManyToOne
-    @JoinColumn(name = "missao_id")
+    @OneToMany(mappedBy = "missao")
     @OnDelete(action = OnDeleteAction.SET_NULL)
-    private Missao missao;
+    private List<Ninja> ninjas;
 
-    public Ninja(NinjaDTO ninja) {
-        this.id = ninja.id();
-        this.nome = ninja.nome();
-        this.idade = ninja.idade();
-        this.cla = ninja.cla();
-        this.vila = ninja.vila();
+    public Missao(MissaoDTO missao) {
+        this.id = missao.id();
+        this.nome = missao.nome();
+        this.descricao = missao.descricao();
+        this.dificuldade = missao.dificuldade();
     }
 
 }

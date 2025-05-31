@@ -3,6 +3,7 @@ package com.esoft.teste_spring.Controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.esoft.teste_spring.DTOs.NinjaDTO;
 import com.esoft.teste_spring.Services.NinjaService;
 import com.esoft.teste_spring.models.Ninja;
 
@@ -20,31 +21,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping("/api/ninjas")
+@RequestMapping("/ninjas")
 public class NinjaController {
 
     @Autowired
     NinjaService ninjaService;
 
     @GetMapping
-    public List<Ninja> listar() {
+    public List<NinjaDTO> listar() {
         return ninjaService.listar();
     }
 
     @PostMapping
-    public Ninja criar(@RequestBody Ninja ninja) {
+    public NinjaDTO criar(@RequestBody NinjaDTO ninja) throws Exception {
         return ninjaService.salvar(ninja);
     }
 
     @GetMapping("/{id}")
-    public Optional<Ninja> buscarPorId(@PathVariable Long id) {
+    public NinjaDTO buscarPorId(@PathVariable Long id) {
         return ninjaService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public Ninja putMethodName(@PathVariable Long id, @RequestBody Ninja ninja) {
-        ninja.setId(id);
-        return ninjaService.salvar(ninja);
+    public NinjaDTO putMethodName(@PathVariable Long id, @RequestBody NinjaDTO ninja) {
+        return ninjaService.salvar(id, ninja);
     }
 
     @DeleteMapping("{id}")
