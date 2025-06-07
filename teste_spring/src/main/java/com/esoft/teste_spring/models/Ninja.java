@@ -40,7 +40,6 @@ public class Ninja {
 
     @ManyToOne
     @JoinColumn(name = "missao_id")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Missao missao;
 
     public Ninja(NinjaDTO ninja) {

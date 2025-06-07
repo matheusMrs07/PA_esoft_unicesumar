@@ -6,10 +6,13 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.esoft.teste_spring.DTOs.NinjaDTO;
+import com.esoft.teste_spring.Exceptions.NaoEncontradoException;
 import com.esoft.teste_spring.models.Missao;
 import com.esoft.teste_spring.models.Ninja;
 import com.esoft.teste_spring.repositories.MissaoRepository;
 import com.esoft.teste_spring.repositories.NinjaRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class NinjaService {
@@ -26,22 +29,23 @@ public class NinjaService {
         return ninjaRepository.findAll().stream().map(ninja -> new NinjaDTO(ninja)).toList();
     }
 
-    public NinjaDTO salvar(NinjaDTO ninja) throws Exception {
+    public NinjaDTO salvar(NinjaDTO ninja) {
 
         Ninja ninjaEntity = new Ninja(ninja);
 
         if (ninja.missaoId() != null) {
-            Missao missao = missaoRepository.findById(ninja.missaoId()).orElse(null);
-            if (missao == null) {
-                throw new Exception("Item não encontrado");
-            }
+            Missao missao = missaoRepository.findById(ninja.missaoId()).orElseThrow(
+                    () -> new NaoEncontradoException("Missão com id " + ninja.missaoId() + " não foi encontrada!"));
             ninjaEntity.setMissao(missao);
         }
 
         return new NinjaDTO(ninjaRepository.save(ninjaEntity));
     }
 
+    @Transactional
     public NinjaDTO salvar(Long id, NinjaDTO ninja) {
+        ninjaRepository.findById(id)
+                .orElseThrow(() -> new NaoEncontradoException("Ninja com id " + id + " não foi encontrado!"));
 
         Ninja ninjaEntity = new Ninja(ninja);
         ninjaEntity.setId(id);
@@ -55,10 +59,13 @@ public class NinjaService {
     }
 
     public NinjaDTO buscarPorId(Long id) {
-        return new NinjaDTO(ninjaRepository.findById(id).orElse(null));
+        return new NinjaDTO(ninjaRepository.findById(id)
+                .orElseThrow(() -> new NaoEncontradoException("Ninja com id " + id + " não foi encontrado!")));
     }
 
     public void deletar(Long id) {
+        ninjaRepository.findById(id)
+                .orElseThrow(() -> new NaoEncontradoException("Ninja com id " + id + " não foi encontrado!"));
         ninjaRepository.deleteById(id);
     }
 

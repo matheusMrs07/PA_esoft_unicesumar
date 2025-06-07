@@ -38,7 +38,6 @@ public class Missao {
     private String dificuldade;
 
     @OneToMany(mappedBy = "missao")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<Ninja> ninjas;
 
     public Missao(MissaoDTO missao) {

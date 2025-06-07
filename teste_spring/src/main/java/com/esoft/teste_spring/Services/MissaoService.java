@@ -5,10 +5,14 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.esoft.teste_spring.DTOs.MissaoDTO;
+import com.esoft.teste_spring.Exceptions.DeleteNegadoException;
+import com.esoft.teste_spring.Exceptions.NaoEncontradoException;
 import com.esoft.teste_spring.models.Missao;
 import com.esoft.teste_spring.models.Ninja;
 import com.esoft.teste_spring.repositories.MissaoRepository;
 import com.esoft.teste_spring.repositories.NinjaRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class MissaoService {
@@ -37,7 +41,7 @@ public class MissaoService {
     }
 
     public MissaoDTO salvar(Long id, MissaoDTO missao) {
-
+        missaoRepository.findById(id).orElseThrow(() -> new NaoEncontradoException("Missao não encontrada!"));
         Missao missaoEntity = new Missao(missao);
         missaoEntity.setId(id);
 
@@ -52,22 +56,28 @@ public class MissaoService {
         return new MissaoDTO(missaoRepository.save(missaoEntity));
     }
 
-    public List<Missao> listar() {
-        return missaoRepository.findAll();
+    public List<MissaoDTO> listar() {
+        return missaoRepository.findAll().stream().map(missao -> new MissaoDTO(missao)).toList();
     }
 
+    @Transactional
     public void remover(Long id) throws Exception {
-        Missao missao = missaoRepository.findById(id).orElse(null);
+        Missao missao = missaoRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new NaoEncontradoException("Missão com id " + id + "não encontrada."));
 
         if (missao != null) {
-            if (!missao.getNinjas().isEmpty()) {
-                throw new Exception("Tem itens vinculados");
-            }
+            missao.getNinjas().forEach(ninja -> {
+                ninja.setMissao(null);
+                ninjaRepository.save(ninja);
+            });
         }
         missaoRepository.deleteById(id);
     }
 
-    public MissaoDTO buscarPorId(Long id) {
-        return new MissaoDTO(missaoRepository.findById(id).orElse(null));
+    public MissaoDTO buscarPorId(Long id) throws NaoEncontradoException {
+        return new MissaoDTO(missaoRepository.findById(id)
+                .orElseThrow(() -> new NaoEncontradoException("Missão com id " + id + "não encontrada.")));
     }
 }

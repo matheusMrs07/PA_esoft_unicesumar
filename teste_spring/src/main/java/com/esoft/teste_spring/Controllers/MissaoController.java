@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.esoft.teste_spring.DTOs.MissaoDTO;
+import com.esoft.teste_spring.Exceptions.NaoEncontradoException;
 import com.esoft.teste_spring.Services.MissaoService;
 import com.esoft.teste_spring.models.Missao;
 
@@ -27,7 +28,7 @@ public class MissaoController {
     MissaoService missaoService;
 
     @GetMapping
-    public List<Missao> listar() {
+    public List<MissaoDTO> listar() {
         return missaoService.listar();
     }
 
@@ -38,23 +39,18 @@ public class MissaoController {
 
     @PutMapping("/{id}")
     public MissaoDTO editar(@PathVariable Long id, @RequestBody MissaoDTO entity) {
-        missaoService.salvar(id, entity);
-        return entity;
+        return missaoService.salvar(id, entity);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletar(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Object> deletar(@PathVariable Long id) throws Exception {
         missaoService.remover(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MissaoDTO> retrieve(@PathVariable Long id) {
-        MissaoDTO result = missaoService.buscarPorId(id);
-        if (result == null) {
-            ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(result);
+    public MissaoDTO retrieve(@PathVariable Long id) {
+        return missaoService.buscarPorId(id);
     }
 
 }
